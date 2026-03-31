@@ -40,4 +40,21 @@ class ProductRepository implements ProductRepositoryInterface
             ->with('category')
             ->find($id);
     }
+
+    public function create(array $data): Product
+    {
+        return $this->model->create($data)->load('category');
+    }
+
+    public function update(Product $product, array $data): Product
+    {
+        $product->update($data);
+
+        return $product->load('category');
+    }
+
+    public function delete(Product $product): bool
+    {
+        return (bool) $product->delete();
+    }
 }
