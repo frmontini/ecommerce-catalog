@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -16,39 +17,29 @@ class ProductSeeder extends Seeder
             return;
         }
 
-        $products = [
-            [
-                'name' => 'Notebook Dell Inspiron',
-                'description' => 'Notebook com 16GB de RAM e SSD de 512GB.',
-                'price' => 4299.90,
-                'image_url' => 'https://via.placeholder.com/300x300.png?text=Notebook',
-                'category_id' => $categories->firstWhere('name', 'Eletrônicos')?->id ?? $categories->first()->id,
-            ],
-            [
-                'name' => 'Camiseta Básica Preta',
-                'description' => 'Camiseta de algodão, confortável para uso diário.',
-                'price' => 59.90,
-                'image_url' => 'https://via.placeholder.com/300x300.png?text=Camiseta',
-                'category_id' => $categories->firstWhere('name', 'Roupas')?->id ?? $categories->first()->id,
-            ],
-            [
-                'name' => 'Panela Antiaderente',
-                'description' => 'Panela ideal para preparo rápido e fácil limpeza.',
-                'price' => 129.90,
-                'image_url' => 'https://via.placeholder.com/300x300.png?text=Panela',
-                'category_id' => $categories->firstWhere('name', 'Casa')?->id ?? $categories->first()->id,
-            ],
-            [
-                'name' => 'Bola de Futebol',
-                'description' => 'Bola oficial para treino e lazer.',
-                'price' => 89.90,
-                'image_url' => 'https://via.placeholder.com/300x300.png?text=Bola',
-                'category_id' => $categories->firstWhere('name', 'Esportes')?->id ?? $categories->first()->id,
-            ],
+        $productNames = [
+            'Notebook Gamer', 'Smartphone Android', 'iPhone', 'Monitor 24"', 'Teclado Mecânico',
+            'Mouse Gamer', 'Cadeira Ergonômica', 'Fone Bluetooth', 'Smart TV 50"', 'Tablet',
+            'Camiseta Básica', 'Calça Jeans', 'Jaqueta', 'Tênis Esportivo', 'Boné',
+            'Panela Antiaderente', 'Liquidificador', 'Cafeteira', 'Air Fryer', 'Microondas',
+            'Bola de Futebol', 'Bicicleta', 'Luva de Boxe', 'Raquete de Tênis', 'Halter',
+            'Relógio Digital', 'Óculos de Sol', 'Mochila', 'Carteira', 'Perfume',
+            'Drone', 'Câmera DSLR', 'Tripé', 'Ring Light', 'Webcam',
+            'Console Gamer', 'Controle Wireless', 'Headset', 'Placa de Vídeo', 'SSD 1TB',
+            'HD Externo', 'Carregador', 'Cabo USB', 'Power Bank', 'Echo Dot',
+            'Google Nest', 'Ventilador', 'Aspirador', 'Ar Condicionado', 'Luminária'
         ];
 
-        foreach ($products as $product) {
-            Product::create($product);
+        foreach (range(1, 80) as $i) {
+            $name = $productNames[array_rand($productNames)];
+
+            Product::create([
+                'name' => $name . ' ' . Str::random(5),
+                'description' => 'Produto de alta qualidade: ' . $name . ', ideal para uso no dia a dia.',
+                'price' => rand(50, 5000) + (rand(0, 99) / 100),
+                'image_url' => 'https://placehold.co/600x600?text=' . urlencode($name),
+                'category_id' => $categories->random()->id,
+            ]);
         }
     }
 }

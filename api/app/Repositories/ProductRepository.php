@@ -15,7 +15,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function paginateWithFilters(array $filters): LengthAwarePaginator
     {
-        $perPage = (int) ($filters['per_page'] ?? 10);
+        $perPage = (int) ($filters['per_page'] ?? 9);
         $search = $filters['search'] ?? null;
         $categoryId = $filters['category'] ?? null;
 

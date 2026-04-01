@@ -10,6 +10,16 @@ O backend foi estruturado em camadas, seguindo o padrão solicitado no desafio:
 - **Resources / Collections**
 - **Autenticação com Laravel Sanctum**
 
+O frontend foi desenvolvido em **React + Vite**, com interface para:
+
+- listagem de produtos
+- busca por nome/descrição
+- filtro por categoria
+- paginação
+- visualização de detalhes
+- login e cadastro
+- operações autenticadas de cadastro/edição/exclusão
+
 ---
 
 ## Repositório
@@ -26,7 +36,7 @@ cd ecommerce-catalog
 ```text
 ecommerce-catalog/
   api/        # Backend Laravel
-  web/        # Frontend React
+  web/        # Frontend React + Vite
   docker/
     php/
       Dockerfile
@@ -46,6 +56,7 @@ ecommerce-catalog/
 
 ### Frontend
 - React
+- Vite
 
 ### Infraestrutura
 - Docker
@@ -91,6 +102,7 @@ docker compose up -d --build
 Esse comando sobe:
 
 - container do backend Laravel
+- container do frontend React/Vite
 - container do banco MySQL
 
 Se quiser acompanhar os logs em tempo real:
@@ -127,8 +139,15 @@ docker compose exec app php artisan migrate:fresh --seed
 
 ## Acesso à aplicação
 
+### Frontend React
+A interface fica disponível em:
+
+```text
+http://localhost:5173
+```
+
 ### API Laravel
-A aplicação fica disponível em:
+A API fica disponível em:
 
 ```text
 http://localhost:8000
@@ -160,7 +179,7 @@ As rotas protegidas utilizam autenticação com **Sanctum**.
 
 ---
 
-## Fluxo recomendado para o avaliador
+## Fluxo recomendado para avaliação
 
 Para colocar o projeto no ar com banco populado:
 
@@ -176,8 +195,8 @@ docker compose exec app php artisan migrate:fresh --seed
 Depois disso, basta acessar:
 
 ```text
-http://localhost:8000/api/categories
-http://localhost:8000/api/products
+Frontend: http://localhost:5173
+API:      http://localhost:8000/api/products
 ```
 
 ---
@@ -204,6 +223,11 @@ docker compose restart
 docker compose restart app
 ```
 
+### Reiniciar apenas o frontend
+```bash
+docker compose restart web
+```
+
 ### Ver status dos containers
 ```bash
 docker compose ps
@@ -212,6 +236,38 @@ docker compose ps
 ### Entrar no container do backend
 ```bash
 docker compose exec app bash
+```
+
+### Entrar no container do frontend
+```bash
+docker compose exec web sh
+```
+
+---
+
+## Frontend
+
+O frontend roda com Vite dentro do container `web`.
+
+Configuração usada no ambiente Docker:
+
+```env
+VITE_API_URL=/api
+VITE_BACKEND_URL=http://app:8000
+```
+
+Com isso, o frontend fica disponível em `http://localhost:5173` e encaminha as requisições da API para o backend Laravel via proxy.
+
+Se precisar reinstalar as dependências do frontend:
+
+```bash
+docker compose exec web npm install
+```
+
+Se precisar reiniciar o servidor de desenvolvimento do frontend:
+
+```bash
+docker compose restart web
 ```
 
 ---
@@ -246,10 +302,7 @@ docker compose exec app php artisan migrate:fresh --seed
 
 ## Seeds
 
-O projeto possui seeders para popular o banco com dados básicos de exemplo, incluindo:
-
-- categorias
-- produtos
+O projeto possui seeders para popular o banco com categorias e produtos para testes.
 
 Comando:
 
@@ -389,7 +442,7 @@ curl -X POST http://localhost:8000/api/products \
     "description": "Produto criado manualmente",
     "price": 99.90,
     "category_id": 1,
-    "image_url": "https://via.placeholder.com/300"
+    "image_url": "https://placehold.co/600x600?text=Produto"
   }'
 ```
 
@@ -418,9 +471,10 @@ Essa organização foi adotada para manter o código mais legível, testável e 
 ## Observações
 
 - O backend já está preparado para execução em Docker.
+- O frontend também roda em Docker com Vite.
 - O banco de dados pode ser recriado facilmente com migrations e seeders.
 - Os testes automatizados podem ser executados com um único comando.
-- O frontend está separado do backend para manter a arquitetura desacoplada.
+- A arquitetura está desacoplada entre backend e frontend.
 
 ---
 

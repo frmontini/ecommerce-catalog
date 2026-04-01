@@ -23,7 +23,7 @@ class ProductController extends Controller
         $products = $this->productService->listProducts([
             'search' => $request->query('search'),
             'category' => $request->query('category'),
-            'per_page' => $request->query('per_page', 10),
+            'per_page' => $request->query('per_page', 9),
         ]);
 
         return new ProductCollection($products);
